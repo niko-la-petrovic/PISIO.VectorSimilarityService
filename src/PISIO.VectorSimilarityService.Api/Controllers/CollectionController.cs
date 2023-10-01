@@ -1,5 +1,7 @@
-﻿using PISIO.VectorSimilarityService.Api.Services.Collection.Manager;
+﻿using PISIO.VectorSimilarityService.Api.Dtos;
+using PISIO.VectorSimilarityService.Api.Services.Collection.Manager;
 using PISIO.VectorSimilarityService.Dtos.Collection;
+using PISIO.VectorSimilarityService.Dtos.Vector;
 
 namespace PISIO.VectorSimilarityService.Api.Controllers;
 
@@ -12,8 +14,7 @@ public class CollectionController : ControllerBase
 
     public CollectionController(
         ILogger<CollectionController> logger,
-        ICollectionManager collectionManager
-        )
+        ICollectionManager collectionManager)
     {
         _logger = logger;
         _collectionManager = collectionManager;
@@ -27,6 +28,16 @@ public class CollectionController : ControllerBase
         _logger.LogInformation("Getting collection with id {Id}", id);
         var response = await _collectionManager.GetCollectionAsync(id, cancellationToken);
         return Ok(response);
+    }
+
+    [HttpGet]
+    public async Task<Paginated<GetCollectionResponse>> GetCollections(
+        [FromQuery] GetCollectionsRequest request,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Getting collections");
+        var response = await _collectionManager.GetCollectionsAsync(request, cancellationToken);
+        return response;
     }
 
     [HttpPost]

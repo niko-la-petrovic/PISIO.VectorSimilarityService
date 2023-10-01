@@ -11,11 +11,12 @@ public class VectorSimilarityController : ControllerBase
         _logger = logger;
     }
 
-    [HttpPost]
+    [HttpPost("from-file")]
     public ActionResult<string> PostFromFile(
 
         )
     {
+        // TODO implement action
         return Ok("Hello from VectorSimilarityController");
     }
 }

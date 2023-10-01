@@ -10,5 +10,5 @@ public class Vector : ICreated, IUpdated
     public DateTime CreatedAt { get; set; }
     public DateTime? LastUpdated { get; set; }
 
-    public required virtual Collection Collection { get; set; }
+    public virtual Collection? Collection { get; set; }
 }

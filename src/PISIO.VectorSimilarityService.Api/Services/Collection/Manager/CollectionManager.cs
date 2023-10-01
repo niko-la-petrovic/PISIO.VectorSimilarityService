@@ -1,4 +1,5 @@
-﻿using PISIO.VectorSimilarityService.Api.Services.Collection.Repository;
+﻿using PISIO.VectorSimilarityService.Api.Dtos;
+using PISIO.VectorSimilarityService.Api.Services.Collection.Repository;
 using PISIO.VectorSimilarityService.Dtos.Collection;
 
 namespace PISIO.VectorSimilarityService.Api.Services.Collection.Manager;
@@ -30,5 +31,12 @@ public class CollectionManager : ICollectionManager
     {
         _logger.LogInformation("Getting collection with id {Id}", id);
         return _collectionRepository.GetAsync(id, cancellationToken);
+    }
+
+    public async Task<Paginated<GetCollectionResponse>> GetCollectionsAsync(GetCollectionsRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Getting collections");
+        var response = await _collectionRepository.GetAllAsync(request, cancellationToken);
+        return response;
     }
 }
