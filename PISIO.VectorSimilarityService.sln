@@ -7,16 +7,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4E85EAB6-4C7
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PISIO.VectorSimilarityService.Api", "src\PISIO.VectorSimilarityService.Api\PISIO.VectorSimilarityService.Api.csproj", "{3A227607-40BB-4B82-9409-2039BB00A3C1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PISIO.VectorSimilarityService.Dtos", "PISIO.VectorSimilarityService.Dtos\PISIO.VectorSimilarityService.Dtos.csproj", "{43CEDDD8-587F-4C27-A839-9907ADBC00AF}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0108C40C-76BA-4871-A4D5-352787793F5B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PISIO.VectorSimilarityService.Data", "PISIO.VectorSimilarityService.Data\PISIO.VectorSimilarityService.Data.csproj", "{5992F429-D921-4B0D-8DE4-7149CDEDD4B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PISIO.VectorSimilarityService.Data", "src\PISIO.VectorSimilarityService.Data\PISIO.VectorSimilarityService.Data.csproj", "{4ED8C756-F7E5-4A81-AB30-AA572F5883A8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PISIO.VectorSimilarityService.Models", "PISIO.VectorSimilarityService.Models\PISIO.VectorSimilarityService.Models.csproj", "{AF70AD6D-16F9-4A56-A159-BE734DE53449}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PISIO.VectorSimilarityService.Dtos", "src\PISIO.VectorSimilarityService.Dtos\PISIO.VectorSimilarityService.Dtos.csproj", "{AA1A8263-6F5E-40C2-931C-798D91B6A6DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PISIO.VectorSimilarityService.Models", "src\PISIO.VectorSimilarityService.Models\PISIO.VectorSimilarityService.Models.csproj", "{0BD716CF-647E-4A76-90A0-CAB3CFFAFDB7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,27 +28,24 @@ Global
 		{3A227607-40BB-4B82-9409-2039BB00A3C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A227607-40BB-4B82-9409-2039BB00A3C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A227607-40BB-4B82-9409-2039BB00A3C1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43CEDDD8-587F-4C27-A839-9907ADBC00AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43CEDDD8-587F-4C27-A839-9907ADBC00AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43CEDDD8-587F-4C27-A839-9907ADBC00AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43CEDDD8-587F-4C27-A839-9907ADBC00AF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5992F429-D921-4B0D-8DE4-7149CDEDD4B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5992F429-D921-4B0D-8DE4-7149CDEDD4B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5992F429-D921-4B0D-8DE4-7149CDEDD4B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5992F429-D921-4B0D-8DE4-7149CDEDD4B7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AF70AD6D-16F9-4A56-A159-BE734DE53449}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AF70AD6D-16F9-4A56-A159-BE734DE53449}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AF70AD6D-16F9-4A56-A159-BE734DE53449}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AF70AD6D-16F9-4A56-A159-BE734DE53449}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4ED8C756-F7E5-4A81-AB30-AA572F5883A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4ED8C756-F7E5-4A81-AB30-AA572F5883A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4ED8C756-F7E5-4A81-AB30-AA572F5883A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4ED8C756-F7E5-4A81-AB30-AA572F5883A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AA1A8263-6F5E-40C2-931C-798D91B6A6DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AA1A8263-6F5E-40C2-931C-798D91B6A6DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AA1A8263-6F5E-40C2-931C-798D91B6A6DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AA1A8263-6F5E-40C2-931C-798D91B6A6DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BD716CF-647E-4A76-90A0-CAB3CFFAFDB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD716CF-647E-4A76-90A0-CAB3CFFAFDB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD716CF-647E-4A76-90A0-CAB3CFFAFDB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD716CF-647E-4A76-90A0-CAB3CFFAFDB7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3A227607-40BB-4B82-9409-2039BB00A3C1} = {4E85EAB6-4C7E-478A-A40C-551B851753D5}
-		{43CEDDD8-587F-4C27-A839-9907ADBC00AF} = {4E85EAB6-4C7E-478A-A40C-551B851753D5}
-		{5992F429-D921-4B0D-8DE4-7149CDEDD4B7} = {4E85EAB6-4C7E-478A-A40C-551B851753D5}
-		{AF70AD6D-16F9-4A56-A159-BE734DE53449} = {4E85EAB6-4C7E-478A-A40C-551B851753D5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9C887D19-182C-4FBE-ACD6-210F10E86185}
