@@ -7,4 +7,6 @@ public interface IApplicationDbContext
 {
     DbSet<Collection> Collections { get; }
     DbSet<Vector> Vectors { get; }
+
+    Task SaveChangesAsync(CancellationToken cancellationToken);
 }

@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pgvector.EntityFrameworkCore;
 using PISIO.VectorSimilarityService.Data.Configuration;
 
 namespace PISIO.VectorSimilarityService.Data.EntityFramework.Extensions;
@@ -14,8 +12,10 @@ public static class IServiceCollectionExtensions
     {
         services.AddDbContext<ApplicationDbContext>(options =>
         {
-            options.UseNpgsql(databaseSettings.ConnectionString, o => o.UseVector());
+            options.UseNpgsql(databaseSettings.ConnectionString);
         });
+        services.AddScoped<IApplicationDbContext>(
+            provider => provider.GetRequiredService<ApplicationDbContext>());
         return services;
     }
 }

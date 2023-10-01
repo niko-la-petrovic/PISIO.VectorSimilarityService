@@ -1,3 +1,6 @@
 ﻿namespace PISIO.VectorSimilarityService.Data.Configuration;
 
-public record PersistenceSettings(DatabaseSettings Database);
+public class PersistenceSettings
+{
+    public required DatabaseSettings Database { get; init; }
+}
