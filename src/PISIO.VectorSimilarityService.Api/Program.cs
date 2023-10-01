@@ -1,15 +1,20 @@
+using PISIO.VectorSimilarityService.Api.Services.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+var builderServices = builder.Services;
+var builderConfiguration = builder.Configuration;
+var builderEnvironment = builder.Environment;
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builderConfiguration.AddJsonFile($"appsettings.{builderEnvironment.EnvironmentName}.Local.json", optional: true, reloadOnChange: true);
+
+builderServices.AddApiServices(builderConfiguration);
+builderServices.AddControllers();
+builderServices.AddEndpointsApiExplorer();
+builderServices.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

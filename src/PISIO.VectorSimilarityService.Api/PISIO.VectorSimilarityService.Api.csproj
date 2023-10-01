@@ -7,8 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.11" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\PISIO.VectorSimilarityService.Data\PISIO.VectorSimilarityService.Data.csproj" />
+    <ProjectReference Include="..\..\PISIO.VectorSimilarityService.Dtos\PISIO.VectorSimilarityService.Dtos.csproj" />
   </ItemGroup>
 
 </Project>
