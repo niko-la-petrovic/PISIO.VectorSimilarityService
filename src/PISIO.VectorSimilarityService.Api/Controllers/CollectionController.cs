@@ -60,5 +60,14 @@ public class CollectionController : ControllerBase
         return NoContent();
     }
 
-    // TODO add delete and update
+    [HttpPut]
+    public async Task<ActionResult> PutCollection(
+        [FromBody] UpdateCollectionRequest request,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating collection with id {Id}", request.Id);
+        await _collectionManager.UpdateCollectionAsync(request, cancellationToken);
+        _logger.LogInformation("Collection with id {Id} updated", request.Id);
+        return NoContent();
+    }
 }

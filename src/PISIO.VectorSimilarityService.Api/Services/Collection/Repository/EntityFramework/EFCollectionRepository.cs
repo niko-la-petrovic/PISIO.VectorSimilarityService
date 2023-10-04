@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PISIO.VectorSimilarityService.Api.Controllers;
 using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Exceptions;
 using PISIO.VectorSimilarityService.Data;
@@ -110,5 +111,21 @@ public class EFCollectionRepository : ICollectionRepository
             model.EmbeddingSize);
 
         return response;
+    }
+
+    public async Task UpdateAsync(
+        UpdateCollectionRequest request,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating collection with id {Id}", request.Id);
+
+        var updatedRows = await _dbContext.Collections
+            .Where(c => c.Id == request.Id)
+            .ExecuteUpdateAsync(setters => setters
+                .SetProperty(c => c.Name, c => request.Name)
+                .SetProperty(c => c.Description, c => request.Description),
+                cancellationToken);
+
+        _logger.LogInformation("Update of collection with id {Id} affected {Updated} rows", request.Id, updatedRows);
     }
 }

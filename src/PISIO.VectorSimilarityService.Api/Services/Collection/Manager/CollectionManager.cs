@@ -1,4 +1,5 @@
-﻿using PISIO.VectorSimilarityService.Api.Dtos;
+﻿using PISIO.VectorSimilarityService.Api.Controllers;
+using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Exceptions;
 using PISIO.VectorSimilarityService.Api.Services.Collection.Repository;
 using PISIO.VectorSimilarityService.Dtos.Collection;
@@ -27,7 +28,7 @@ public class CollectionManager : ICollectionManager
         _logger.LogInformation("Collection {Name} created", request.Name);
         return response;
     }
-
+    
     public async Task DeleteCollectionAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deleting collection with id {Id}", id);
@@ -57,5 +58,12 @@ public class CollectionManager : ICollectionManager
         _logger.LogInformation("Getting collections");
         var response = await _collectionRepository.GetAllAsync(request, cancellationToken);
         return response;
+    }
+
+    public async Task UpdateCollectionAsync(UpdateCollectionRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating collection with id {Id}", request.Id);
+        await _collectionRepository.UpdateAsync(request, cancellationToken);
+        _logger.LogInformation("Collection with id {Id} updated", request.Id);
     }
 }
