@@ -24,5 +24,4 @@
 		<ProjectReference Include="..\PISIO.VectorSimilarityService.Dtos\PISIO.VectorSimilarityService.Dtos.csproj" />
 		<ProjectReference Include="..\PISIO.VectorSimilarityService.Models\PISIO.VectorSimilarityService.Models.csproj" />
 	</ItemGroup>
-
 </Project>

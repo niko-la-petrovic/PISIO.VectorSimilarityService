@@ -1,7 +1,6 @@
 ﻿using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Services.Collection.Manager;
 using PISIO.VectorSimilarityService.Dtos.Collection;
-using PISIO.VectorSimilarityService.Dtos.Vector;
 
 namespace PISIO.VectorSimilarityService.Api.Controllers;
 
@@ -49,4 +48,17 @@ public class CollectionController : ControllerBase
         var response = await _collectionManager.CreateCollectionAsync(request, cancellationToken);
         return CreatedAtAction(nameof(GetCollection), new { id = response.Id }, response);
     }
+
+    [HttpDelete]
+    public async Task<ActionResult> DeleteCollection(
+        [FromQuery] Guid id,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Deleting collection with id {Id}", id);
+        await _collectionManager.DeleteCollectionAsync(id, cancellationToken);
+        _logger.LogInformation("Collection with id {Id} deleted", id);
+        return NoContent();
+    }
+
+    // TODO add delete and update
 }

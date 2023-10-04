@@ -1,4 +1,5 @@
 ﻿using PISIO.VectorSimilarityService.Api.Dtos;
+using PISIO.VectorSimilarityService.Api.Exceptions;
 using PISIO.VectorSimilarityService.Api.Services.Collection.Repository;
 using PISIO.VectorSimilarityService.Dtos.Collection;
 
@@ -27,13 +28,31 @@ public class CollectionManager : ICollectionManager
         return response;
     }
 
-    public Task<GetCollectionResponse> GetCollectionAsync(Guid id, CancellationToken cancellationToken)
+    public async Task DeleteCollectionAsync(Guid id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Deleting collection with id {Id}", id);
+        var collection = await _collectionRepository.GetAsync(id, cancellationToken);
+        if (collection == null)
+        {
+            _logger.LogInformation("Collection with id {Id} not found", id);
+            throw new EntityNotFoundException<Models.Collection, Guid>();
+        }
+
+        await _collectionRepository.DeleteAsync(id, cancellationToken);
+        _logger.LogInformation("Collection with id {Id} deleted", id);
+    }
+
+    public Task<GetCollectionResponse> GetCollectionAsync(
+        Guid id,
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting collection with id {Id}", id);
         return _collectionRepository.GetAsync(id, cancellationToken);
     }
 
-    public async Task<Paginated<GetCollectionResponse>> GetCollectionsAsync(GetCollectionsRequest request, CancellationToken cancellationToken)
+    public async Task<Paginated<GetCollectionResponse>> GetCollectionsAsync(
+        GetCollectionsRequest request,
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting collections");
         var response = await _collectionRepository.GetAllAsync(request, cancellationToken);

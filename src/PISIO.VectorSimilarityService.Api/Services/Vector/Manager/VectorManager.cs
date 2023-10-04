@@ -41,4 +41,21 @@ public class VectorManager : IVectorManager
         var response = await _vectorRepository.GetFromCollectionAsync(collectionId, page, pageSize, cancellationToken);
         return response;
     }
+
+    public async Task<Paginated<GetVectorResponse>> GetAllAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Getting all vectors");
+        var response = await _vectorRepository.GetAllAsync(page, pageSize, cancellationToken);
+        return response;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Deleting vector with id {Id}", id);
+        await _vectorRepository.DeleteAsync(id, cancellationToken);
+        _logger.LogInformation("Deleted vector with id {Id}", id);
+    }
 }

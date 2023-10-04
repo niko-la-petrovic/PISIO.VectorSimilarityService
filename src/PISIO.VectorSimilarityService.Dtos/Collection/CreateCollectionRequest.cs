@@ -1,3 +1,6 @@
 ﻿namespace PISIO.VectorSimilarityService.Dtos.Collection;
 
-public record CreateCollectionRequest(string Name, string Description);
+public record CreateCollectionRequest(
+    string Name,
+    string Description,
+    int? EmbeddingSize);

@@ -5,4 +5,5 @@ public record GetCollectionResponse(
     string Name,
     string Description,
     DateTime CreatedAt,
-    DateTime? LastUpdated);
+    DateTime? LastUpdated,
+    int? EmbeddingSize);

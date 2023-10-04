@@ -30,7 +30,8 @@ public class EFCollectionRepository : ICollectionRepository
             Id = Guid.NewGuid(),
             Name = request.Name,
             Description = request.Description,
-            Vectors = new List<Models.Vector>()
+            Vectors = new List<Models.Vector>(),
+            EmbeddingSize = request.EmbeddingSize
         };
 
         _dbContext.Collections.Add(model);
@@ -42,9 +43,19 @@ public class EFCollectionRepository : ICollectionRepository
             model.Id,
             model.Name,
             model.Description,
-            model.CreatedAt);
+            model.CreatedAt,
+            model.EmbeddingSize);
 
         return response;
+    }
+
+    public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Deleting collection with id {Id}", id);
+        await _dbContext.Collections
+            .Where(c => c.Id == id)
+            .ExecuteDeleteAsync(cancellationToken);
+        _logger.LogInformation("Collection with id {Id} deleted", id);
     }
 
     public async Task<Paginated<GetCollectionResponse>> GetAllAsync(GetCollectionsRequest request, CancellationToken cancellationToken)
@@ -67,7 +78,8 @@ public class EFCollectionRepository : ICollectionRepository
                 c.Name,
                 c.Description,
                 c.CreatedAt,
-                c.LastUpdated))
+                c.LastUpdated,
+                c.EmbeddingSize))
             .ToListAsync(cancellationToken);
 
         var response = new Paginated<GetCollectionResponse>
@@ -90,7 +102,12 @@ public class EFCollectionRepository : ICollectionRepository
         _logger.LogInformation("Collection with id {Id} found", id);
 
         var response = new GetCollectionResponse(
-            model.Id, model.Name, model.Description, model.CreatedAt, model.LastUpdated);
+            model.Id,
+            model.Name,
+            model.Description,
+            model.CreatedAt,
+            model.LastUpdated,
+            model.EmbeddingSize);
 
         return response;
     }
