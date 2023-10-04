@@ -1,4 +1,5 @@
-﻿using PISIO.VectorSimilarityService.Api.Dtos;
+﻿using PISIO.VectorSimilarityService.Api.Controllers;
+using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Dtos.Vector;
 
 namespace PISIO.VectorSimilarityService.Api.Services.Vector.Repository;
@@ -10,4 +11,5 @@ public interface IVectorRepository
     Task<Paginated<GetVectorResponse>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken);
     Task<GetVectorResponse> GetAsync(Guid id, CancellationToken cancellationToken);
     Task<Paginated<GetVectorResponse>> GetFromCollectionAsync(Guid collectionId, int page, int pageSize, CancellationToken cancellationToken);
+    Task UpdateAsync(Guid id, UpdateVectorRequest request, CancellationToken cancellationToken);
 }

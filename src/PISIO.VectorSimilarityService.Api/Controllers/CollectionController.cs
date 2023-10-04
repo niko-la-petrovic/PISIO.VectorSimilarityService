@@ -60,11 +60,15 @@ public class CollectionController : ControllerBase
         return NoContent();
     }
 
-    [HttpPut]
+    [HttpPut("{id}")]
     public async Task<ActionResult> PutCollection(
+        [FromRoute] Guid id,
         [FromBody] UpdateCollectionRequest request,
         CancellationToken cancellationToken)
     {
+        if (id != request.Id)
+            return BadRequest();
+
         _logger.LogInformation("Updating collection with id {Id}", request.Id);
         await _collectionManager.UpdateCollectionAsync(request, cancellationToken);
         _logger.LogInformation("Collection with id {Id} updated", request.Id);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PISIO.VectorSimilarityService.Api.Controllers;
 using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Exceptions;
 using PISIO.VectorSimilarityService.Data.EntityFramework;
@@ -145,5 +146,44 @@ public class EFVectorRepository : IVectorRepository
             responseItems);
 
         return response;
+    }
+
+    public async Task UpdateAsync(Guid id, UpdateVectorRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating vector with id {Id}", id);
+        var model = await _dbContext.Vectors
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken) ??
+            throw EntityNotFoundException.Create<Models.Vector, Guid>(id);
+
+        if (request.Embedding.Length == 0)
+        {
+            _logger.LogError("Embedding cannot be empty");
+            throw new ArgumentException("Embedding cannot be empty", nameof(request));
+        }
+
+        var collection = await _dbContext.Collections
+            .FirstOrDefaultAsync(c => c.Id == model.CollectionId, cancellationToken);
+        if (collection is null)
+        {
+            _logger.LogError("Collection with id {CollectionId} does not exist", model.CollectionId);
+            throw EntityNotFoundException.Create<Models.Collection, Guid>(model.CollectionId);
+        }
+
+        if (collection.EmbeddingSize is null)
+            collection.EmbeddingSize = request.Embedding.Length;
+        else if (collection.EmbeddingSize != request.Embedding.Length)
+        {
+            _logger.LogError("Embedding size {EmbeddingSize} does not match collection embedding size {CollectionEmbeddingSize}", request.Embedding.Length, collection.EmbeddingSize);
+            throw new ArgumentException("Embedding size does not match collection embedding size", nameof(request));
+        }
+
+        model.Embedding = request.Embedding;
+        model.Class = request.Class;
+        model.Description = request.Description;
+        model.CollectionId = request.CollectionId;
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Updated vector with id {Id}", id);
     }
 }

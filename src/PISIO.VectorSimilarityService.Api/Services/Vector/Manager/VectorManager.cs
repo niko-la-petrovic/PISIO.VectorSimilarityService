@@ -1,4 +1,5 @@
-﻿using PISIO.VectorSimilarityService.Api.Dtos;
+﻿using PISIO.VectorSimilarityService.Api.Controllers;
+using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Services.Vector.Repository;
 using PISIO.VectorSimilarityService.Dtos.Vector;
 
@@ -57,5 +58,12 @@ public class VectorManager : IVectorManager
         _logger.LogInformation("Deleting vector with id {Id}", id);
         await _vectorRepository.DeleteAsync(id, cancellationToken);
         _logger.LogInformation("Deleted vector with id {Id}", id);
+    }
+
+    public async Task UpdateAsync(Guid id, UpdateVectorRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating vector with id {Id}", id);
+        await _vectorRepository.UpdateAsync(id, request, cancellationToken);
+        _logger.LogInformation("Updated vector with id {Id}", id);
     }
 }

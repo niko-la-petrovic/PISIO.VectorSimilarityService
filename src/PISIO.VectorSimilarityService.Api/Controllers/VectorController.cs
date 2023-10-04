@@ -52,9 +52,8 @@ public class VectorController : ControllerBase
         return CreatedAtAction(nameof(GetVector), new { id = response.Id }, response);
     }
 
-    // TODO dto for get all
     [HttpGet]
-    public async Task<Paginated<GetVectorResponse>> GetAll(
+    public async Task<Paginated<GetVectorResponse>> GetAllVectors(
         CancellationToken cancellationToken,
         [FromQuery] int page = 1,
         [FromQuery] int pageSize = 10)
@@ -65,7 +64,7 @@ public class VectorController : ControllerBase
     }
 
     [HttpDelete("{id}")]
-    public async Task<ActionResult> Delete(
+    public async Task<ActionResult> DeleteVector(
                [FromRoute] Guid id,
                       CancellationToken cancellationToken)
     {
@@ -74,5 +73,19 @@ public class VectorController : ControllerBase
         _logger.LogInformation("Vector with id {Id} deleted", id);
         return NoContent();
     }
-    // TODO add delete and update
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult> PutVector(
+        [FromRoute] Guid id,
+        [FromBody] UpdateVectorRequest request,
+        CancellationToken cancellationToken)
+    {
+        if (id != request.Id)
+            return BadRequest();
+
+        _logger.LogInformation("Updating vector with id {Id}", id);
+        await _vectorManager.UpdateAsync(id, request, cancellationToken);
+        _logger.LogInformation("Vector with id {Id} updated", id);
+        return NoContent();
+    }
 }
