@@ -1,4 +1,4 @@
-﻿namespace PISIO.VectorSimilarityService.Api.Controllers;
+﻿namespace PISIO.VectorSimilarityService.Dtos.Vector;
 
 public record UpdateVectorRequest(
     Guid Id,
