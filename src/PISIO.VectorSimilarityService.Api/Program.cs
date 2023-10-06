@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Mvc.Filters;
 using PISIO.VectorSimilarityService.Api.Filters.Exception.Extensions;
 using PISIO.VectorSimilarityService.Api.Services.Extensions;
-using System.Collections.Immutable;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var builderServices = builder.Services;
 var builderConfiguration = builder.Configuration;
 var builderEnvironment = builder.Environment;
+var isDevelopment = builderEnvironment.IsDevelopment();
 
 builderConfiguration.AddJsonFile($"appsettings.{builderEnvironment.EnvironmentName}.Local.json", optional: true, reloadOnChange: true);
 
@@ -21,6 +20,17 @@ builderServices.Configure<ForwardedHeadersOptions>(options =>
         ForwardedHeaders.XForwardedProto |
         ForwardedHeaders.XForwardedFor;
 });
+builderServices.AddCors(options =>
+{
+    if (isDevelopment)
+        options.AddDefaultPolicy(builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 builderServices.AddApiServices(builderConfiguration);
 builderServices.AddControllers(options =>
 {
@@ -31,6 +41,7 @@ builderServices.AddSwaggerGen();
 
 var app = builder.Build();
 
+app.UseCors();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
