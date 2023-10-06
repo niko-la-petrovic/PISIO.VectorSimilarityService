@@ -8,6 +8,7 @@ public class Collection : ICreated, IUpdated
     public DateTime CreatedAt { get; set; }
     public DateTime? LastUpdated { get; set; }
     public int? EmbeddingSize { get; set; }
+    public long? VectorCount { get; set; }
 
     public required virtual IEnumerable<Vector> Vectors { get; set; }
 }

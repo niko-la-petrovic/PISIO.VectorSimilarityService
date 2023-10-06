@@ -6,4 +6,5 @@ public record GetCollectionResponse(
     string Description,
     DateTime CreatedAt,
     DateTime? LastUpdated,
-    int? EmbeddingSize);
+    int? EmbeddingSize,
+    long? VectorCount);

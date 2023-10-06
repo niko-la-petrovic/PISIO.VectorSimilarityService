@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PISIO.VectorSimilarityService.Api.Controllers;
 using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Exceptions;
 using PISIO.VectorSimilarityService.Data.EntityFramework;
@@ -45,7 +44,6 @@ public class EFVectorRepository : IVectorRepository
             throw new ArgumentException("Embedding size does not match collection embedding size", nameof(request));
         }
 
-
         _logger.LogInformation("Creating vector with class {Class}", request.Class);
         var model = new Models.Vector
         {
@@ -54,6 +52,7 @@ public class EFVectorRepository : IVectorRepository
             Embedding = request.Embedding,
             Description = request.Description
         };
+        collection.VectorCount++;
 
         _dbContext.Vectors.Add(model);
         await _dbContext.SaveChangesAsync(cancellationToken);
@@ -65,9 +64,31 @@ public class EFVectorRepository : IVectorRepository
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deleting vector with id {Id}", id);
-        await _dbContext.Vectors
-            .Where(v => v.Id == id)
-            .ExecuteDeleteAsync(cancellationToken);
+        using var tx = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        try
+        {
+            var vector = await _dbContext.Vectors
+                .FirstOrDefaultAsync(v => v.Id == id, cancellationToken) ??
+                throw EntityNotFoundException.Create<Models.Vector, Guid>(id);
+
+            var deleted = await _dbContext.Vectors
+                 .Where(v => v.Id == id)
+                 .ExecuteDeleteAsync(cancellationToken);
+
+            await _dbContext.Collections
+                .Where(c => c.Id == vector.CollectionId)
+                .ExecuteUpdateAsync(c =>
+                    c.SetProperty(
+                        c => c.VectorCount,
+                        c => c.VectorCount - 1),
+                    cancellationToken);
+
+            await tx.CommitAsync(cancellationToken);
+        }
+        catch (Exception)
+        {
+            tx.Rollback();
+        }
         _logger.LogInformation("Deleted vector with id {Id}", id);
     }
 
@@ -77,7 +98,7 @@ public class EFVectorRepository : IVectorRepository
 
         var query = _dbContext.Vectors.AsQueryable();
 
-        var totalCount = await query.CountAsync();
+        var totalCount = await query.CountAsync(cancellationToken);
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         var responseItems = await query

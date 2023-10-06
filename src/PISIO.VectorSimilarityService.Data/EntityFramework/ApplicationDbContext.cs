@@ -21,6 +21,9 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             c.HasKey(c => c.Id);
 
             c.HasIndex(c => c.Name);
+
+            c.Property(c => c.VectorCount)
+            .HasDefaultValue(0L);
         });
 
         modelBuilder.Entity<Vector>(v =>

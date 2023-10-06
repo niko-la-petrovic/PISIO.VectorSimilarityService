@@ -80,7 +80,8 @@ public class EFCollectionRepository : ICollectionRepository
                 c.Description,
                 c.CreatedAt,
                 c.LastUpdated,
-                c.EmbeddingSize))
+                c.EmbeddingSize,
+                c.VectorCount))
             .ToListAsync(cancellationToken);
 
         var response = new Paginated<GetCollectionResponse>
@@ -108,7 +109,8 @@ public class EFCollectionRepository : ICollectionRepository
             model.Description,
             model.CreatedAt,
             model.LastUpdated,
-            model.EmbeddingSize);
+            model.EmbeddingSize,
+            model.VectorCount);
 
         return response;
     }
