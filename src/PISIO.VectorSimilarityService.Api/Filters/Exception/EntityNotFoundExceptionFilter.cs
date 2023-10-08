@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Filters;
+﻿
+using Microsoft.AspNetCore.Mvc.Filters;
 using PISIO.VectorSimilarityService.Api.Exceptions;
 
 namespace PISIO.VectorSimilarityService.Api.Filters.Exception;

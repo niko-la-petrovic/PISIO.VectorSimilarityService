@@ -13,8 +13,7 @@ public class EFVectorRepository : IVectorRepository
 
     public EFVectorRepository(
         ILogger<EFVectorRepository> logger,
-        ApplicationDbContext dbContext
-        )
+        ApplicationDbContext dbContext)
     {
         _logger = logger;
         _dbContext = dbContext;
@@ -80,7 +79,10 @@ public class EFVectorRepository : IVectorRepository
                 .ExecuteUpdateAsync(c =>
                     c.SetProperty(
                         c => c.VectorCount,
-                        c => c.VectorCount - 1),
+                        c => c.VectorCount - 1)
+                    .SetProperty(
+                        c => c.EmbeddingSize,
+                        c => c.VectorCount > 0 ? c.EmbeddingSize : 0),
                     cancellationToken);
 
             await tx.CommitAsync(cancellationToken);
@@ -102,6 +104,8 @@ public class EFVectorRepository : IVectorRepository
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         var responseItems = await query
+            .OrderByDescending(
+                x => x.LastUpdated != null ? x.LastUpdated : x.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(x => new GetVectorResponse(
@@ -146,6 +150,8 @@ public class EFVectorRepository : IVectorRepository
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         var responseItems = await query
+            .OrderByDescending(
+                x => x.LastUpdated != null ? x.LastUpdated : x.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .Select(x => new GetVectorResponse(

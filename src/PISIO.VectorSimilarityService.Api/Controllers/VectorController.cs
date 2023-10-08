@@ -65,8 +65,8 @@ public class VectorController : ControllerBase
 
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteVector(
-               [FromRoute] Guid id,
-                      CancellationToken cancellationToken)
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deleting vector with id {Id}", id);
         await _vectorManager.DeleteAsync(id, cancellationToken);

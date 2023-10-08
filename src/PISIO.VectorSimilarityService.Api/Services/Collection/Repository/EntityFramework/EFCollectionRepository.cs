@@ -71,7 +71,9 @@ public class EFCollectionRepository : ICollectionRepository
         var totalPages = (int)Math.Ceiling((double)total / request.PageSize);
 
         var responseItems = await query
-            .OrderBy(c => c.Name)
+            .OrderByDescending(
+                c => c.LastUpdated != null ? c.LastUpdated : c.CreatedAt)
+            .ThenBy(c => c.Name)
             .Skip((request.Page - 1) * request.PageSize)
             .Take(request.PageSize)
             .Select(c => new GetCollectionResponse(

@@ -3,7 +3,7 @@
 public record GetCollectionResponse(
     Guid Id,
     string Name,
-    string Description,
+    string? Description,
     DateTime CreatedAt,
     DateTime? LastUpdated,
     int? EmbeddingSize,

@@ -49,9 +49,9 @@ public class CollectionController : ControllerBase
         return CreatedAtAction(nameof(GetCollection), new { id = response.Id }, response);
     }
 
-    [HttpDelete]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteCollection(
-        [FromQuery] Guid id,
+        [FromRoute] Guid id,
         CancellationToken cancellationToken)
     {
         _logger.LogInformation("Deleting collection with id {Id}", id);
