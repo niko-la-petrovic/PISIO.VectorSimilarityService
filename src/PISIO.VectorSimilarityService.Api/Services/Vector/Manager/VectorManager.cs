@@ -1,5 +1,4 @@
-﻿using PISIO.VectorSimilarityService.Api.Controllers;
-using PISIO.VectorSimilarityService.Api.Dtos;
+﻿using PISIO.VectorSimilarityService.Api.Dtos;
 using PISIO.VectorSimilarityService.Api.Services.Vector.Repository;
 using PISIO.VectorSimilarityService.Dtos.Vector;
 
@@ -19,13 +18,21 @@ public class VectorManager : IVectorManager
         _vectorRepository = vectorRepository;
     }
 
-    // TODO add exception filters for EntityNotFoundException
-
     public async Task<CreateVectorResponse> CreateVectorAsync(CreateVectorRequest request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Creating vector with class {Class}", request.Class);
         var response = await _vectorRepository.AddAsync(request, cancellationToken);
         _logger.LogInformation("Created vector with id {Id}", response.Id);
+        return response;
+    }
+
+    public async Task<IEnumerable<CreateVectorResponse>> CreateVectorsAsync(
+        IEnumerable<CreateVectorRequest> requests,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Creating vectors");
+        var response = await _vectorRepository.AddAsync(requests, cancellationToken);
+        _logger.LogInformation("Created vectors");
         return response;
     }
 

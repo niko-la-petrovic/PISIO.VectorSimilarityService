@@ -3,6 +3,6 @@
 public record CreateCollectionResponse(
     Guid Id,
     string Name,
-    string Description,
+    string? Description,
     DateTime CratedAt,
     int? EmbeddingSize);

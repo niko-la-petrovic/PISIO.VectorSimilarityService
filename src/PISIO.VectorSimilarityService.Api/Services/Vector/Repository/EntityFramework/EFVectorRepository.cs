@@ -27,21 +27,10 @@ public class EFVectorRepository : IVectorRepository
             throw new ArgumentException("Embedding cannot be empty", nameof(request));
         }
 
-        var collection = await _dbContext.Collections
-            .FirstOrDefaultAsync(c => c.Id == request.CollectionId, cancellationToken);
-        if (collection is null)
-        {
-            _logger.LogError("Collection with id {CollectionId} does not exist", request.CollectionId);
-            throw EntityNotFoundException.Create<Models.Collection, Guid>(request.CollectionId);
-        }
-
-        if (collection.EmbeddingSize is null)
-            collection.EmbeddingSize = request.Embedding.Length;
-        else if (collection.EmbeddingSize != request.Embedding.Length)
-        {
-            _logger.LogError("Embedding size {EmbeddingSize} does not match collection embedding size {CollectionEmbeddingSize}", request.Embedding.Length, collection.EmbeddingSize);
-            throw new ArgumentException("Embedding size does not match collection embedding size", nameof(request));
-        }
+        var collection = await CheckOrUpdateCollection(
+            request.CollectionId,
+            request.Embedding.Length,
+            cancellationToken);
 
         _logger.LogInformation("Creating vector with class {Class}", request.Class);
         var model = new Models.Vector
@@ -58,6 +47,64 @@ public class EFVectorRepository : IVectorRepository
         _logger.LogInformation("Created vector with id {Id}", model.Id);
 
         return new CreateVectorResponse(model.Id, model.Class, model.Description, model.CollectionId, model.Embedding);
+    }
+
+    private async Task<Models.Collection> CheckOrUpdateCollection(
+        Guid collectionId,
+        int embeddingSize,
+        CancellationToken cancellationToken)
+    {
+        var collection = await _dbContext.Collections
+            .FirstOrDefaultAsync(c => c.Id == collectionId, cancellationToken);
+        if (collection is null)
+        {
+            _logger.LogError("Collection with id {CollectionId} does not exist", collectionId);
+            throw EntityNotFoundException.Create<Models.Collection, Guid>(collectionId);
+        }
+
+        if (collection.EmbeddingSize is null)
+            collection.EmbeddingSize = embeddingSize;
+        else if (collection.EmbeddingSize != embeddingSize)
+        {
+            _logger.LogError("Embedding size {EmbeddingSize} does not match collection embedding size {CollectionEmbeddingSize}", embeddingSize, collection.EmbeddingSize);
+            throw new ArgumentException("Embedding size does not match collection embedding size", nameof(embeddingSize));
+        }
+
+        return collection;
+    }
+
+    public async Task<IEnumerable<CreateVectorResponse>> AddAsync(
+        IEnumerable<CreateVectorRequest> requests,
+        CancellationToken cancellationToken)
+    {
+        var collection = await CheckOrUpdateCollection(
+            requests.First().CollectionId,
+            requests.First().Embedding.Length,
+            cancellationToken);
+
+        _logger.LogInformation("Creating vectors");
+        var toAdd = requests.Select(r =>
+            new Models.Vector
+            {
+                Class = r.Class,
+                Embedding = r.Embedding,
+                CollectionId = r.CollectionId,
+            });
+        _dbContext.Vectors.AddRange(toAdd);
+        collection.VectorCount += toAdd.LongCount();
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        _logger.LogInformation("Created vectors");
+        var responses = toAdd.Select(
+            v => new CreateVectorResponse(
+                v.Id,
+                v.Class,
+                v.Description,
+                v.CollectionId,
+                v.Embedding));
+
+        return responses;
     }
 
     public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
