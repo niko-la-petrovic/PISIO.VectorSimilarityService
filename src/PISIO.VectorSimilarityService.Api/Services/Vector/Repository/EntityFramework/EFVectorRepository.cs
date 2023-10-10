@@ -141,7 +141,12 @@ public class EFVectorRepository : IVectorRepository
         _logger.LogInformation("Deleted vector with id {Id}", id);
     }
 
-    public async Task<Paginated<GetVectorResponse>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken)
+    // TODO add AsNoTracking optimizations where appropriate
+
+    public async Task<Paginated<GetVectorResponse>> GetAllAsync(
+        int page,
+        int pageSize,
+        CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting all vectors");
 
@@ -151,6 +156,7 @@ public class EFVectorRepository : IVectorRepository
         var totalPages = (int)Math.Ceiling((double)totalCount / pageSize);
 
         var responseItems = await query
+            .AsNoTracking()
             .OrderByDescending(
                 x => x.LastUpdated != null ? x.LastUpdated : x.CreatedAt)
             .Skip((page - 1) * pageSize)
@@ -176,6 +182,31 @@ public class EFVectorRepository : IVectorRepository
         };
 
         return response;
+    }
+
+    public async Task<IEnumerable<GetVectorResponse>> GetAllRawAsync(
+        Guid collectionId,
+        CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Getting all vectors");
+
+        var responseItems = await _dbContext.Vectors
+            .AsNoTracking()
+            .Where(x => x.CollectionId == collectionId)
+            .OrderBy(
+                x => x.Id)
+            .Select(x => new GetVectorResponse(
+                x.Id,
+                x.Class,
+                x.Description,
+                x.CollectionId,
+                x.Embedding,
+                x.CreatedAt,
+                x.LastUpdated))
+            .ToListAsync(cancellationToken);
+
+        _logger.LogInformation("Found {Count} vectors", responseItems.Count);
+        return responseItems;
     }
 
     public async Task<GetVectorResponse> GetAsync(Guid id, CancellationToken cancellationToken)

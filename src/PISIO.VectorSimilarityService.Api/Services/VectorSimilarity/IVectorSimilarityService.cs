@@ -1,9 +1,10 @@
-﻿namespace PISIO.VectorSimilarityService.Api.Services.VectorSimilarity;
+﻿using PISIO.VectorSimilarityService.Dtos.VectorSimilarity;
+
+namespace PISIO.VectorSimilarityService.Api.Services.VectorSimilarity;
 
 public interface IVectorSimilarityService
 {
-    Task<string[]> FindClassesAsync(
-        Guid collectionId,
-        float[] embeddings,
+    Task<VectorSimilarityResponse> FindClassesAsync(
+        VectorSimilarityRequest request,
         CancellationToken cancellationToken);
 }

@@ -10,6 +10,7 @@ public interface IVectorRepository
     Task<IEnumerable<CreateVectorResponse>> AddAsync(IEnumerable<CreateVectorRequest> requests, CancellationToken cancellationToken);
     Task DeleteAsync(Guid id, CancellationToken cancellationToken);
     Task<Paginated<GetVectorResponse>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken);
+    Task<IEnumerable<GetVectorResponse>> GetAllRawAsync(Guid collectionId, CancellationToken cancellationToken);
     Task<GetVectorResponse> GetAsync(Guid id, CancellationToken cancellationToken);
     Task<Paginated<GetVectorResponse>> GetFromCollectionAsync(Guid collectionId, int page, int pageSize, CancellationToken cancellationToken);
     Task UpdateAsync(Guid id, UpdateVectorRequest request, CancellationToken cancellationToken);

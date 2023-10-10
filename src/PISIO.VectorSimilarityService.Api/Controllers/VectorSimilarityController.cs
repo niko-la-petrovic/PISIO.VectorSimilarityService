@@ -23,20 +23,30 @@ public class VectorSimilarityController : ControllerBase
         [FromBody] VectorSimilarityRequest request,
         CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Received request vector similarity request with {Count} embeddings", request.Embeddings.Length);
-        if (request.Embeddings.Length == 0)
+        if (!VectorSimilarityConstants.Distance.Distances.Contains(request.Distance))
         {
-            _logger.LogError
-                ("Received request vector similarity request with no embeddings");
-            return BadRequest("At least two embeddings are required");
+            _logger.LogError("Received request vector similarity request with an invalid distance {Distance}", request.Distance);
+            return BadRequest("Invalid distance provided");
         }
 
-        _logger.LogInformation("Finding classes for embeddings {Count}", request.Embeddings.Length);
+        if (!VectorSimilarityConstants.Algorithm.Algorithms.Contains(request.Algorithm))
+        {
+            _logger.LogError("Received request vector similarity request with an invalid algorithm {Algorithm}", request.Algorithm);
+            return BadRequest("Invalid algorithm provided");
+        }
+
+        _logger.LogInformation("Received request vector similarity request for {Algorithm} and k {K}", request.Algorithm, request.K);
+        if (request.Embedding.Length == 0)
+        {
+            _logger.LogError
+                ("Received request vector similarity request with an empty embedding");
+            return BadRequest("Empty embedding provided");
+        }
+
         var res = await _vectorSimilarityService.FindClassesAsync(
-            request.CollectionId,
-            request.Embeddings,
+            request,
             cancellationToken);
-        _logger.LogInformation("Found {Count} classes", res.Length);
+        _logger.LogInformation("Found {Count} classes", res.Classes.Length);
 
         return Ok(res);
     }
@@ -44,6 +54,7 @@ public class VectorSimilarityController : ControllerBase
     [HttpPost("from-file")]
     public ActionResult<string> PostFromFile()
     {
+        throw new NotImplementedException();
         // TODO parse file
         // TODO call service on embeddings
         // TODO implement action

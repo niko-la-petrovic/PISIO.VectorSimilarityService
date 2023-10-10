@@ -2,4 +2,7 @@
 
 public record VectorSimilarityRequest(
     Guid CollectionId,
-    float[] Embeddings);
+    float[] Embedding,
+    string Algorithm,
+    int K,
+    string Distance);
