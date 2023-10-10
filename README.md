@@ -2,6 +2,12 @@
 
 ## Scripts
 
+Docker build
+
+```bash
+docker build -t pisio-vec-sim-service-api -f ./src/PISIO.VectorSimilarityService.Api/Dockerfile .
+```
+
 ### Migrations
 
 #### Tooling
