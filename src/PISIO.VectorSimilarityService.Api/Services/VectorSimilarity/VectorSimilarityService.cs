@@ -1,4 +1,5 @@
-﻿using PISIO.VectorSimilarityService.Api.Services.Vector.Repository;
+﻿using Microsoft.Extensions.Logging.Abstractions;
+using PISIO.VectorSimilarityService.Api.Services.Vector.Repository;
 using PISIO.VectorSimilarityService.Dtos.VectorSimilarity;
 
 namespace PISIO.VectorSimilarityService.Api.Services.VectorSimilarity;
@@ -20,7 +21,6 @@ public class VectorSimilarityService : IVectorSimilarityService
         VectorSimilarityRequest request,
         CancellationToken cancellationToken)
     {
-        var distance = request.Distance;
         var algorithm = request.Algorithm;
         switch (algorithm)
         {
@@ -41,6 +41,9 @@ public class VectorSimilarityService : IVectorSimilarityService
         var allVectors = await _vectorRepository.GetAllRawAsync(
             request.CollectionId,
             cancellationToken);
+
+        if (allVectors.FirstOrDefault(x => x.Embedding.Length != embedding.Length) is not null)
+            throw new ArgumentException("Embedding length mismatch");
 
         foreach (var vector in allVectors)
         {
