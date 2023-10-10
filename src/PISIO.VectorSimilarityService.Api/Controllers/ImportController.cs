@@ -17,6 +17,8 @@ public class ImportController : ControllerBase
         _importManager = importManager;
     }
 
+    // 1 GB
+    [RequestSizeLimit(1_073_741_824)]
     [HttpPost("vector")]
     public async Task<ActionResult> PostImportVectors(
         [FromForm] ImportVectorsRequest request,
